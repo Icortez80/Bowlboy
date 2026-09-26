@@ -243,6 +243,7 @@ GameObject:
   - component: {fileID: 217332455}
   - component: {fileID: 217332454}
   - component: {fileID: 217332453}
+  - component: {fileID: 217332456}
   m_Layer: 7
   m_Name: Plat_right
   m_TagString: Untagged
@@ -259,8 +260,8 @@ Transform:
   m_GameObject: {fileID: 217332451}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: -0.5, z: 0}
-  m_LocalScale: {x: 4, y: 0.8, z: 2}
+  m_LocalPosition: {x: 3, y: -1, z: 0}
+  m_LocalScale: {x: 3, y: 0.8, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 550108764}
@@ -343,6 +344,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 217332451}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &217332456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 217332451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c80c18f6abde2a7479faaabe57504815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OneWayPlatform
+  playerCollider: {fileID: 2056946328}
+  platformCollider: {fileID: 217332453}
+  collisionAllowed: 0
+  dropThroughActive: 0
 --- !u!1 &310499133
 GameObject:
   m_ObjectHideFlags: 0
@@ -817,6 +834,7 @@ GameObject:
   - component: {fileID: 910208217}
   - component: {fileID: 910208216}
   - component: {fileID: 910208215}
+  - component: {fileID: 910208218}
   m_Layer: 7
   m_Name: Plat_mid
   m_TagString: Untagged
@@ -833,8 +851,8 @@ Transform:
   m_GameObject: {fileID: 910208213}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4, y: -0.5, z: 0}
-  m_LocalScale: {x: 4, y: 0.8, z: 2}
+  m_LocalPosition: {x: -4, y: -1, z: 0}
+  m_LocalScale: {x: 3, y: 0.8, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 550108764}
@@ -917,6 +935,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 910208213}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &910208218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 910208213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c80c18f6abde2a7479faaabe57504815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OneWayPlatform
+  playerCollider: {fileID: 2056946328}
+  platformCollider: {fileID: 910208215}
+  collisionAllowed: 0
+  dropThroughActive: 0
 --- !u!1 &1513655831
 GameObject:
   m_ObjectHideFlags: 0
@@ -1071,9 +1105,9 @@ GameObject:
   - component: {fileID: 2056946326}
   - component: {fileID: 2056946325}
   - component: {fileID: 2056946324}
-  - component: {fileID: 2056946323}
   - component: {fileID: 2056946322}
   - component: {fileID: 2056946327}
+  - component: {fileID: 2056946328}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1107,30 +1141,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 120
-  m_CollisionDetection: 0
---- !u!136 &2056946323
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2056946321}
-  m_Material: {fileID: 13400000, guid: cfc7a6cdf866f6f47a8ecfba1a677313, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_CollisionDetection: 1
 --- !u!23 &2056946324
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1218,9 +1229,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   speed: 8
   gravityMultiplier: 2.5
-  jumpSpeed: 15
+  fullJumpSpeed: 12
+  shortJumpSpeed: 10
   fallMultiplier: 4
-  lowJumpMultiplier: 9
+  shortHopTime: 0.1
+  coyoteTime: 0.15
   dashSpeed: 15
   dashDuration: 0.2
   dashCooldown: 0.5
@@ -1231,6 +1244,27 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 128
+--- !u!65 &2056946328
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2056946321}
+  m_Material: {fileID: 13400000, guid: cfc7a6cdf866f6f47a8ecfba1a677313, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.6, y: 2, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2111165946
 GameObject:
   m_ObjectHideFlags: 0
@@ -1243,6 +1277,7 @@ GameObject:
   - component: {fileID: 2111165950}
   - component: {fileID: 2111165949}
   - component: {fileID: 2111165948}
+  - component: {fileID: 2111165951}
   m_Layer: 7
   m_Name: Plat_left
   m_TagString: Untagged
@@ -1259,8 +1294,8 @@ Transform:
   m_GameObject: {fileID: 2111165946}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11, y: -0.5, z: 0}
-  m_LocalScale: {x: 4, y: 0.8, z: 2}
+  m_LocalPosition: {x: -11, y: -1, z: 0}
+  m_LocalScale: {x: 3, y: 0.8, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 550108764}
@@ -1343,6 +1378,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2111165946}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2111165951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2111165946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c80c18f6abde2a7479faaabe57504815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OneWayPlatform
+  playerCollider: {fileID: 2056946328}
+  platformCollider: {fileID: 2111165948}
+  collisionAllowed: 0
+  dropThroughActive: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

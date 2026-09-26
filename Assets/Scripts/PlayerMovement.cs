@@ -6,11 +6,16 @@ public class PlayerMovement : MonoBehaviour
 
     //******** jump variables
     [SerializeField] public float gravityMultiplier = 2.5f;
-    [SerializeField] public float jumpSpeed = 15f;
+    [SerializeField] public float fullJumpSpeed = 12f;
+    [SerializeField] public float shortJumpSpeed = 10f;
     [SerializeField] public float fallMultiplier = 4f;
-    [SerializeField] public float lowJumpMultiplier = 9f;
+    [SerializeField] public float shortHopTime = 0.15f;
+    [SerializeField] public float coyoteTime = 0.15f;
     private bool jumpRequested;
     private bool jumpHeld;
+    private bool jumpDecisionPending = false;
+    private float jumpTimer = 0f;
+    private float coyoteTimer = 0f;
 
     //******** dash variables
     [SerializeField] public float dashSpeed = 15f;
@@ -21,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     private float dashDirection = 1f;
     private float dashCooldownRemaining = 0f;
     private bool dashRequested = false;
+    private float facingDirection = 1f;
 
     //******** misc. player variables
     [SerializeField] Rigidbody rb;
@@ -29,7 +35,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float groundCheckDistance = 0.2f;
     [SerializeField] LayerMask groundLayer;
     private Vector3 movementInput;
-    private float facingDirection = 1f;
+    private RaycastHit groundHit;
+
+    OneWayPlatform platform = null;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -81,10 +89,18 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         //grounded check
-        isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, 
+        isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, out groundHit, 
                                      groundCheckDistance, groundLayer, QueryTriggerInteraction.Ignore);
         //update cooldown timer
         dashCooldownRemaining -= Time.fixedDeltaTime;
+        if (isGrounded) 
+        { 
+            coyoteTimer = coyoteTime; 
+        } 
+        else
+        {
+            coyoteTimer -= Time.fixedDeltaTime;
+        }
 
         if(dashRequested && dashCooldownRemaining <= 0f && !isDashing)
         {
@@ -93,6 +109,7 @@ public class PlayerMovement : MonoBehaviour
             isDashing = true;
             //disable built-in gravity
             rb.useGravity = false;
+            jumpDecisionPending = false;
         }
         if (isDashing)
         {
@@ -111,21 +128,52 @@ public class PlayerMovement : MonoBehaviour
         {
             MovePlayer();
 
-            if (jumpRequested && isGrounded)
+            //add jump velocity to player
+            if (jumpRequested && (isGrounded || coyoteTimer > 0))
             {
-                rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpSpeed, 0f);
+                if (groundHit.collider != null)
+                {
+                    platform = groundHit.collider.GetComponent<OneWayPlatform>();
+                }
+
+                if (Keyboard.current.sKey.isPressed && platform != null)
+                {
+                    platform.dropThrough();
+                    jumpDecisionPending = false;
+                    coyoteTimer = 0f;
+                }
+                else
+                {
+                    rb.linearVelocity = new Vector3(rb.linearVelocity.x, shortJumpSpeed, 0f);
+                    jumpTimer = shortHopTime;
+                    jumpDecisionPending = true;
+                }
+            }
+            else if (jumpDecisionPending)
+            {
+                if (!Keyboard.current.spaceKey.isPressed)
+                {
+                    jumpDecisionPending = false;
+                }
+                else
+                {
+                    jumpTimer -= Time.fixedDeltaTime;
+                    if(jumpTimer <= 0)
+                    {
+                        rb.linearVelocity = new Vector3(rb.linearVelocity.x, fullJumpSpeed, 0f);
+                        jumpDecisionPending = false;
+                    }
+                }
             }
 
             if (rb.linearVelocity.y <= 0)
             {
+                //this affects the downward portion of the jump
                 rb.AddForce(Physics.gravity * (fallMultiplier - 1), ForceMode.Acceleration);
-            }
-            else if (rb.linearVelocity.y > 0 && !jumpHeld)
-            {
-                rb.AddForce(Physics.gravity * (lowJumpMultiplier - 1), ForceMode.Acceleration);
             }
             else
             {
+                //this affects the rising portion of the jump
                 rb.AddForce(Physics.gravity * (gravityMultiplier - 1), ForceMode.Acceleration);
             }
         }
