@@ -259,7 +259,7 @@ Transform:
   m_GameObject: {fileID: 217332451}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: -1, z: 0}
+  m_LocalPosition: {x: 3, y: -0.5, z: 0}
   m_LocalScale: {x: 4, y: 0.8, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -833,7 +833,7 @@ Transform:
   m_GameObject: {fileID: 910208213}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4, y: -1, z: 0}
+  m_LocalPosition: {x: -4, y: -0.5, z: 0}
   m_LocalScale: {x: 4, y: 0.8, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1219,6 +1219,11 @@ MonoBehaviour:
   speed: 8
   gravityMultiplier: 2.5
   jumpSpeed: 15
+  fallMultiplier: 4
+  lowJumpMultiplier: 9
+  dashSpeed: 15
+  dashDuration: 0.2
+  dashCooldown: 0.5
   rb: {fileID: 2056946322}
   isGrounded: 0
   groundCheck: {fileID: 1513655832}
@@ -1254,7 +1259,7 @@ Transform:
   m_GameObject: {fileID: 2111165946}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11, y: -1, z: 0}
+  m_LocalPosition: {x: -11, y: -0.5, z: 0}
   m_LocalScale: {x: 4, y: 0.8, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
