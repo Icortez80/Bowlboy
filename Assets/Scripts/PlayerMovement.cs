@@ -36,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] LayerMask groundLayer;
     private Vector3 movementInput;
     private RaycastHit groundHit;
+    public float FacingDirection => facingDirection;
 
     OneWayPlatform platform = null;
 
@@ -89,6 +90,7 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         //grounded check
+        platform = null;
         isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, out groundHit, 
                                      groundCheckDistance, groundLayer, QueryTriggerInteraction.Ignore);
         //update cooldown timer
@@ -138,7 +140,7 @@ public class PlayerMovement : MonoBehaviour
 
                 if (Keyboard.current.sKey.isPressed && platform != null)
                 {
-                    platform.dropThrough();
+                    platform.DropThrough();
                     jumpDecisionPending = false;
                     coyoteTimer = 0f;
                 }

@@ -5,8 +5,8 @@ public class OneWayPlatform : MonoBehaviour
     [SerializeField] public Collider playerCollider;
     [SerializeField] public Collider platformCollider;
     // Update is called once per frame
-    [SerializeField] public bool collisionAllowed = false;
-    public bool dropThroughActive = false;
+    private bool collisionAllowed = false;
+    private bool dropThroughActive = false;
 
     void FixedUpdate()
     {
@@ -37,7 +37,7 @@ public class OneWayPlatform : MonoBehaviour
         }
     }
 
-    public void dropThrough()
+    public void DropThrough()
     {
         dropThroughActive = true;
     }
