@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] public float speed = 8f;
+    [SerializeField] public float speed = 9f;
 
     //******** jump variables
     [SerializeField] public float gravityMultiplier = 2.5f;
@@ -35,8 +36,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float groundCheckDistance = 0.2f;
     [SerializeField] LayerMask groundLayer;
     private Vector3 movementInput;
+    private bool superLocked;
+    private RigidbodyConstraints constraintsBeforeSuper;
+    private bool gravityBeforeSuper;
     private RaycastHit groundHit;
     public float FacingDirection => facingDirection;
+    public bool IsDashing => isDashing;
+    private PlayerInputReader inputReader;
 
     OneWayPlatform platform = null;
 
@@ -45,18 +51,27 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        inputReader = GetComponent<PlayerInputReader>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (superLocked)
+        {
+            jumpRequested = false;
+            dashRequested = false;
+            return;
+        }
+        /*
         //get keyboard input for horizontal movement
         if (Keyboard.current.aKey.isPressed)
         {
             //update speed to move left
             movementInput = new Vector3(-1, 0f, 0f);
 
-        }else if (Keyboard.current.dKey.isPressed)
+        }
+        else if (Keyboard.current.dKey.isPressed)
         {
             //update speed to move right
             movementInput = new Vector3(1, 0f, 0f);
@@ -85,10 +100,37 @@ public class PlayerMovement : MonoBehaviour
         {
             dashRequested = true;
         }
+        */
+        //controller movement logic
+        movementInput = new Vector3(inputReader.MoveAim.x, 0f, 0f);
+
+        if (movementInput.x != 0f && !isDashing)
+        {
+            facingDirection = movementInput.x;
+        }
+
+        jumpHeld = inputReader.JumpHeld;
+
+        if (inputReader.JumpPressed)
+        {
+            jumpRequested = true;
+        }
+
+        if (inputReader.DashPressed)
+        {
+            dashRequested = true;
+        }
     }
 
     private void FixedUpdate()
     {
+        if (superLocked)
+        {
+            jumpRequested = false;
+            dashRequested = false;
+            return;
+        }
+
         //grounded check
         platform = null;
         isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, out groundHit, 
@@ -138,7 +180,7 @@ public class PlayerMovement : MonoBehaviour
                     platform = groundHit.collider.GetComponent<OneWayPlatform>();
                 }
 
-                if (Keyboard.current.sKey.isPressed && platform != null)
+                if (inputReader.MoveAim.y < 0f && platform != null)
                 {
                     platform.DropThrough();
                     jumpDecisionPending = false;
@@ -153,7 +195,7 @@ public class PlayerMovement : MonoBehaviour
             }
             else if (jumpDecisionPending)
             {
-                if (!Keyboard.current.spaceKey.isPressed)
+                if (!jumpHeld)
                 {
                     jumpDecisionPending = false;
                 }
@@ -186,6 +228,36 @@ public class PlayerMovement : MonoBehaviour
 
     void MovePlayer()
     {
-        rb.linearVelocity = new Vector3(movementInput.x * speed, rb.linearVelocity.y, 0f);
+        //if the aim lock btn is pressed x movement will 0 else normal
+        float horizontalSpeed = inputReader.AimLocked ? 0f : movementInput.x * speed;
+        rb.linearVelocity = new Vector3(horizontalSpeed, rb.linearVelocity.y, 0f);
+    }
+
+    public void BeginSuperLock()
+    {
+        if (superLocked) return;
+
+        constraintsBeforeSuper = rb.constraints;
+        gravityBeforeSuper = rb.useGravity;
+        superLocked = true;
+        rb.linearVelocity = Vector3.zero;
+        rb.useGravity = false;
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+
+        jumpRequested = false;
+        dashRequested = false;
+        jumpDecisionPending = false;
+        coyoteTimer = 0;
+    }
+
+    public void EndSuperLock()
+    {
+        if (!superLocked) return;
+
+        rb.constraints = constraintsBeforeSuper;
+        rb.useGravity = gravityBeforeSuper;
+        jumpRequested = false;
+        dashRequested = false;
+        superLocked = false;
     }
 }
