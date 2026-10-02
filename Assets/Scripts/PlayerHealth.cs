@@ -3,6 +3,8 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     [SerializeField] public int maxHealth = 3;
+    [SerializeField] private float hitInvulnerabilityDuration = 1f;
+    private float hitInvulnerabilityRemaining = 0f;
     private int currentHealth;
     private PlayerSpecialAttack special;
 
@@ -16,6 +18,13 @@ public class PlayerHealth : MonoBehaviour
     {
         currentHealth = maxHealth;    
     }
+    private void Update()
+    {
+        if(hitInvulnerabilityRemaining > 0)
+        {
+            hitInvulnerabilityRemaining -= Time.deltaTime;
+        }
+    }
 
     public bool TakeDamage(int damage)
     {
@@ -25,6 +34,7 @@ public class PlayerHealth : MonoBehaviour
         if (special.IsSuperActive) return false;
 
         currentHealth -= damage;
+        hitInvulnerabilityRemaining = hitInvulnerabilityDuration;
         if(currentHealth <= 0)
         {
             print("Player defeated!");
