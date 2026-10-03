@@ -5,7 +5,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] public int maxHealth = 3;
     [SerializeField] private float hitInvulnerabilityDuration = 1f;
     private float hitInvulnerabilityRemaining = 0f;
-    private int currentHealth;
+    [SerializeField]private int currentHealth;
     private PlayerSpecialAttack special;
 
     private void Awake()
@@ -32,10 +32,12 @@ public class PlayerHealth : MonoBehaviour
         if (currentHealth <= 0) return false;
         //player currently using super
         if (special.IsSuperActive) return false;
-
+        if (hitInvulnerabilityRemaining > 0) return false;
+       
         currentHealth -= damage;
+        //print("Player health -1");
         hitInvulnerabilityRemaining = hitInvulnerabilityDuration;
-        if(currentHealth <= 0)
+        if (currentHealth <= 0)
         {
             print("Player defeated!");
         }

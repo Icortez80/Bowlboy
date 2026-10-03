@@ -9,7 +9,7 @@ public class Projectile : MonoBehaviour
     }
 
     [SerializeField] private Team team = Team.Player;
-    [SerializeField] public float speed = 12f;
+    [SerializeField] public float speed = 14f;
     [SerializeField] public int dmg = 1;
     [SerializeField] public float lifetime = 5f;
 

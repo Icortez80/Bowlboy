@@ -9,7 +9,7 @@ public class ShavingCurl : MonoBehaviour
         LowerSweep
     }
 
-    [SerializeField] private float speed = 8f;
+    [SerializeField] private float speed = 10f;
     [SerializeField] private int damage = 1;
 
     [SerializeField] private Transform upperTurn;
@@ -23,6 +23,15 @@ public class ShavingCurl : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        PlayerHealth player = other.GetComponent<PlayerHealth>();
+        if(player != null)
+        {
+            player.TakeDamage(damage);
+        }
     }
 
     // Update is called once per frame
@@ -73,5 +82,15 @@ public class ShavingCurl : MonoBehaviour
         }
 
 
+    }
+
+    //this method is needed to create the path for each curl object created
+    public void Initialize(Transform upper, Transform lower, Transform end)
+    {
+        upperTurn = upper;
+        lowerTurn = lower;
+        lowerEnd = end;
+        state = TravelState.UpperSweep;
+        turnAngle = 0f;
     }
 }

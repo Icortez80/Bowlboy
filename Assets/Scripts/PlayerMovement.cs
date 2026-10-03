@@ -3,14 +3,14 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] public float speed = 9f;
+    [SerializeField] public float speed = 10f;
 
     //******** jump variables
     [SerializeField] public float gravityMultiplier = 2.5f;
-    [SerializeField] public float fullJumpSpeed = 12f;
-    [SerializeField] public float shortJumpSpeed = 10f;
+    [SerializeField] public float fullJumpSpeed = 13f;
+    [SerializeField] public float shortJumpSpeed = 11f;
     [SerializeField] public float fallMultiplier = 4f;
-    [SerializeField] public float shortHopTime = 0.15f;
+    [SerializeField] public float shortHopTime = 0.1f;
     [SerializeField] public float coyoteTime = 0.15f;
     private bool jumpRequested;
     private bool jumpHeld;

@@ -8,19 +8,22 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] public GameObject firePoint;
     [SerializeField] public GameObject firePointUp;
     [SerializeField] public GameObject firePointDown;
-    [SerializeField] public float shotInterval = .5f;
+    [SerializeField] public float shotInterval = .3f;
+    [SerializeField] private float shotYOffset = 0.4f;
 
     public Vector3 SideFirePosition => firePoint.transform.position;
     private float timer = 0f;
     private PlayerMovement movement;
     private PlayerInputReader inputReader;
     private PlayerEnergy energyOwner;
+    private PlayerSpecialAttack special;
 
     private void Awake()
     {
         movement = GetComponent<PlayerMovement>();
         inputReader = GetComponent<PlayerInputReader>();
         energyOwner = GetComponent<PlayerEnergy>();
+        special = GetComponent<PlayerSpecialAttack>();
     }
 
     // Update is called once per frame
@@ -28,7 +31,7 @@ public class PlayerShooting : MonoBehaviour
     {
         timer -= Time.deltaTime;
 
-        if(inputReader.ShootHeld && timer <= 0)
+        if(inputReader.ShootHeld && timer <= 0 && !special.IsSuperActive)
         {
             //Vector3 direction = new Vector3(0f, 0f, 0f);
             //if (Keyboard.current.dKey.isPressed)
@@ -49,7 +52,7 @@ public class PlayerShooting : MonoBehaviour
             //}
 
             GetShotInfo(out Vector3 direction, out Vector3 spawnPosition);
-
+            spawnPosition.y += Random.Range(-shotYOffset, shotYOffset);
             Projectile shot = Instantiate(projectile, spawnPosition, Quaternion.identity);
             shot.SetDirection(direction);
             shot.SetEnergyOwner(energyOwner);
