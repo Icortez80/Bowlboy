@@ -19,14 +19,14 @@ public class GraphiteBlastZone : MonoBehaviour
     public void ShowWarning()
     {
         isActive = false;
-        zoneVisual.sharedMaterial = warningMaterial;
+        //zoneVisual.sharedMaterial = warningMaterial;
         zoneVisual.enabled = true;
     }
 
     public void Activate()
     {
         isActive = true;
-        zoneVisual.sharedMaterial = activeMaterial;
+        //zoneVisual.sharedMaterial = activeMaterial;
         zoneVisual.enabled = true;
     }
 
