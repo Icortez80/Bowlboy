@@ -6,6 +6,10 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private float hitInvulnerabilityDuration = 1f;
     private float hitInvulnerabilityRemaining = 0f;
     [SerializeField]private int currentHealth;
+    [SerializeField] private SpriteRenderer healthMarker1;
+    [SerializeField] private SpriteRenderer healthMarker2;
+    [SerializeField] private SpriteRenderer healthMarker3;
+
     private PlayerSpecialAttack special;
 
     private void Awake()
@@ -24,6 +28,7 @@ public class PlayerHealth : MonoBehaviour
         {
             hitInvulnerabilityRemaining -= Time.deltaTime;
         }
+        updateUI();
     }
 
     public bool TakeDamage(int damage)
@@ -43,5 +48,29 @@ public class PlayerHealth : MonoBehaviour
         }
 
         return true;
+    }
+
+    private void updateUI()
+    {
+        if(currentHealth == 3)
+        {
+            return;
+        }
+        else if (currentHealth == 2)
+        {
+            //disable health marker3
+            healthMarker3.enabled = false;
+        }
+        else if(currentHealth == 1)
+        {
+            //disable health marker2
+            healthMarker2.enabled = false;
+        }
+        else
+        {
+            //disable health marker1
+            healthMarker1.enabled = false;
+
+        }
     }
 }
