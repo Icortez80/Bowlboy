@@ -61,6 +61,7 @@ public class PlatformSpikeController : MonoBehaviour
             {
                 firstSelected.SetActive();
                 secondSelected.SetActive();
+                SoundController.Instance.Play(SoundController.SoundEffect.SpikeActivate);
                 state = SpikeState.Active;
                 timer = activeDuration;
             }

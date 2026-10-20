@@ -30,6 +30,8 @@ public class BossShavingCurlAttack : MonoBehaviour
                 spawnTimer = spawnDelay;
             }
         }
+
+
     }
     //private void OnDisable()
     //{

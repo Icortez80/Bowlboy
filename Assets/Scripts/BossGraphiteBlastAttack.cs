@@ -43,11 +43,17 @@ public class BossGraphiteBlastAttack : MonoBehaviour
             }else if(currentState == ZoneState.Warning)
             {
                 currentState = ZoneState.Active;
+                if(selectedZone == lower)
+                {
+                    SoundController.Instance.Play(SoundController.SoundEffect.GraphiteBlastBottom);
+                }
+                SoundController.Instance.PlayBeam();
                 selectedZone.Activate();
                 timer = activeDuration;
             }
             else
             {
+                SoundController.Instance.StopBeam();
                 currentState = ZoneState.Cooldown;
                 selectedZone.Hide();
                 timer = cooldownDuration;

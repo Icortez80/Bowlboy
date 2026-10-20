@@ -31,6 +31,8 @@ public class ShavingCurl : MonoBehaviour
         if(player != null)
         {
             player.TakeDamage(damage);
+
+            SoundController.Instance.StopBoomerang();
         }
     }
 
@@ -78,6 +80,8 @@ public class ShavingCurl : MonoBehaviour
             if (nextPosition == lowerEnd.position)
             {
                 Destroy(gameObject);
+
+                SoundController.Instance.StopBoomerang();
             }
         }
 
@@ -92,5 +96,7 @@ public class ShavingCurl : MonoBehaviour
         lowerEnd = end;
         state = TravelState.UpperSweep;
         turnAngle = 0f;
+
+        SoundController.Instance.PlayBoomerang();
     }
 }

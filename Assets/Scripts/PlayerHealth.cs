@@ -43,6 +43,7 @@ public class PlayerHealth : MonoBehaviour
        
         currentHealth -= damage;
         animator.SetTrigger("Hurt");
+        SoundController.Instance.Play(SoundController.SoundEffect.PlayerHurt);
         //print("Player health -1");
         hitInvulnerabilityRemaining = hitInvulnerabilityDuration;
         if (currentHealth <= 0)

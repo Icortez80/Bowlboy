@@ -46,6 +46,7 @@ public class PlayerEnergy : MonoBehaviour
         if(AvailableCharges == maxCharges)
         {
             currentEnergy = 0;
+            SoundController.Instance.PlayPlayerBeam();
             updateUI();
             return SpecialType.Super;
 
@@ -53,6 +54,7 @@ public class PlayerEnergy : MonoBehaviour
         }else if (AvailableCharges >= 1)
         {
             currentEnergy -= hitsPerCharge;
+            SoundController.Instance.Play(SoundController.SoundEffect.ExShot);
             updateUI();
             return SpecialType.EX;
         }

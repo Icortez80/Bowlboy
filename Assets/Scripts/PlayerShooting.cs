@@ -56,6 +56,7 @@ public class PlayerShooting : MonoBehaviour
             Projectile shot = Instantiate(projectile, spawnPosition, Quaternion.identity);
             shot.SetDirection(direction);
             shot.SetEnergyOwner(energyOwner);
+            SoundController.Instance.Play(SoundController.SoundEffect.PlayerShot);
             timer = shotInterval;
         }
 

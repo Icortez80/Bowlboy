@@ -37,6 +37,7 @@ public class IdleSpikes : MonoBehaviour
             if (state == SpikeState.Cooldown)
             {
                 state = SpikeState.Warning;
+                SoundController.Instance.Play(SoundController.SoundEffect.SpikeRumble);
                 ShowWarning();
                 timer = warningDuration;
             }

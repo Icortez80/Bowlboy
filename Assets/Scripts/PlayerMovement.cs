@@ -157,6 +157,7 @@ public class PlayerMovement : MonoBehaviour
             //disable built-in gravity
             rb.useGravity = false;
             jumpDecisionPending = false;
+            SoundController.Instance.Play(SoundController.SoundEffect.PlayerDash);
         }
         if (isDashing)
         {
@@ -262,5 +263,6 @@ public class PlayerMovement : MonoBehaviour
         jumpRequested = false;
         dashRequested = false;
         superLocked = false;
+        SoundController.Instance.StopPlayerBeam();
     }
 }
