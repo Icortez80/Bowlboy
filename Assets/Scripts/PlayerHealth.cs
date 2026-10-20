@@ -9,6 +9,8 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private SpriteRenderer healthMarker1;
     [SerializeField] private SpriteRenderer healthMarker2;
     [SerializeField] private SpriteRenderer healthMarker3;
+    [SerializeField] private Animator animator;
+    public bool IsDefeated => currentHealth <= 0;
 
     private PlayerSpecialAttack special;
 
@@ -40,6 +42,7 @@ public class PlayerHealth : MonoBehaviour
         if (hitInvulnerabilityRemaining > 0) return false;
        
         currentHealth -= damage;
+        animator.SetTrigger("Hurt");
         //print("Player health -1");
         hitInvulnerabilityRemaining = hitInvulnerabilityDuration;
         if (currentHealth <= 0)

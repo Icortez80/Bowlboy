@@ -78,10 +78,17 @@ public class PlatformSpikeController : MonoBehaviour
     {
         foreach (PlatformSpike spike in platformSpikes)
         {
-            spike.ShowEmpty();
+            spike.Hide();
         }
 
+        firstSelected = null;
+        secondSelected = null;
         state = SpikeState.Cooldown;
         timer = cooldownDuration;
+    }
+
+    private void OnDisable()
+    {
+        StopAttack();
     }
 }

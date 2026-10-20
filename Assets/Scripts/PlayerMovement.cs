@@ -41,7 +41,10 @@ public class PlayerMovement : MonoBehaviour
     private bool gravityBeforeSuper;
     private RaycastHit groundHit;
     public float FacingDirection => facingDirection;
+    public bool IsGrounded => isGrounded;
     public bool IsDashing => isDashing;
+    public float VerticalSpeed => rb.linearVelocity.y;
+
     private PlayerInputReader inputReader;
 
     OneWayPlatform platform = null;

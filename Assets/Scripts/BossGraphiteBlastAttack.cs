@@ -55,4 +55,25 @@ public class BossGraphiteBlastAttack : MonoBehaviour
         }
     }
 
+    public void StopAttack()
+    {
+        if (upper != null)
+        {
+            upper.Hide();
+        }
+
+        if (lower != null)
+        {
+            lower.Hide();
+        }
+
+        selectedZone = null;
+        currentState = ZoneState.Cooldown;
+        timer = cooldownDuration;
+    }
+
+    private void OnDisable()
+    {
+        StopAttack();
+    }
 }

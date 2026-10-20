@@ -31,4 +31,14 @@ public class BossShavingCurlAttack : MonoBehaviour
             }
         }
     }
+    //private void OnDisable()
+    //{
+    //    if (activeCurl != null)
+    //    {
+    //        Destroy(activeCurl.gameObject);
+    //        activeCurl = null;
+    //    }
+
+    //    spawnTimer = spawnDelay;
+    //}
 }

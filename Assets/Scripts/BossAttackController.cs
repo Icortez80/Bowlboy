@@ -73,8 +73,8 @@ public class BossAttackController : MonoBehaviour
                 currentPhase = BossPhase.third;
                 print("Boss phase: " + currentPhase);
                 spinAttack.enabled = true;
-                //spikeZone.enabled = true;
-                //platformSpikes.enabled = true;
+                spikeZone.enabled = true;
+                platformSpikes.enabled = true;
             }
         }
         else if(currentPhase == BossPhase.third)
@@ -95,8 +95,14 @@ public class BossAttackController : MonoBehaviour
         blastAttack.enabled = false;
         nibAttack.enabled = false;
         curlAttack.enabled = false;
+
         platformSpikes.StopAttack();
         platformSpikes.enabled = false;
-        spikeZone.enabled = false;
+
+        if (spikeZone != null)
+        {
+            spikeZone.Hide();
+            spikeZone.enabled = false;
+        }
     }
 }
