@@ -704,6 +704,7 @@ GameObject:
   - component: {fileID: 234122032}
   - component: {fileID: 234122033}
   - component: {fileID: 234122034}
+  - component: {fileID: 234122035}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -780,7 +781,8 @@ MonoBehaviour:
   upperTurn: {fileID: 556175499}
   lowerTurn: {fileID: 1143691517}
   lowerEnd: {fileID: 850298456}
-  spawnDelay: 6
+  startupDelay: 2
+  bossAnimation: {fileID: 234122035}
 --- !u!114 &234122031
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -795,9 +797,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossPencilNibAttack
   nibPrefab: {fileID: 4883094879889477846, guid: 75dc57b0ded1ed247b39a4e1f56abb6d, type: 3}
   firePoint: {fileID: 943219329}
-  shotCount: 3
+  shotCount: 5
   spreadAngle: 80
-  shotInterval: 12
+  startupDelay: 2
+  bossAnimation: {fileID: 234122035}
 --- !u!114 &234122032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -814,7 +817,8 @@ MonoBehaviour:
   lower: {fileID: 1888768072}
   warningDuration: 1
   activeDuration: 2
-  cooldownDuration: 12
+  cooldownDuration: 2
+  bossAnimation: {fileID: 234122035}
 --- !u!114 &234122033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -833,6 +837,7 @@ MonoBehaviour:
   shotsPerBurst: 3
   shotSpacing: 0.3
   burstCooldown: 3
+  bossAnimation: {fileID: 234122035}
 --- !u!114 &234122034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -845,12 +850,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d80671b49bb4e24dbf26a3318d03113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossAttackController
-  spinAttack: {fileID: 234122033}
-  blastAttack: {fileID: 234122032}
-  nibAttack: {fileID: 234122031}
-  curlAttack: {fileID: 234122030}
-  platformSpikes: {fileID: 2101702492}
-  spikeZone: {fileID: 1169055261}
+  bossHealth: {fileID: 234122027}
+  bossAnimation: {fileID: 234122035}
+  firstPhaseAttacks:
+  - {fileID: 234122033}
+  - {fileID: 234122031}
+  - {fileID: 234122030}
+  secondPhaseAttacks:
+  - {fileID: 234122033}
+  - {fileID: 234122031}
+  - {fileID: 234122030}
+  - {fileID: 234122032}
+  thirdPhaseAttacks:
+  - {fileID: 234122033}
+  - {fileID: 2101702492}
+  - {fileID: 1169055261}
+  delayBetweenAttacks: 2
+--- !u!114 &234122035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 234122026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43f7ea28c68866a43ab30f145c433db1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossAnimationController
+  animator: {fileID: 930799848}
 --- !u!1 &234631911
 GameObject:
   m_ObjectHideFlags: 0
@@ -1151,7 +1179,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 1, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 861582948}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &330585547
@@ -1824,8 +1853,8 @@ Transform:
   m_GameObject: {fileID: 668287345}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.29, y: 1.69, z: 0}
-  m_LocalScale: {x: 1.6537, y: 1.6537, z: 1.6537}
+  m_LocalPosition: {x: -1.95, y: 2.62, z: 0}
+  m_LocalScale: {x: 2.0659397, y: 2.0659397, z: 2.0659397}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2072728999}
@@ -2538,6 +2567,55 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2039381613}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &861582946
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 861582948}
+  - component: {fileID: 861582947}
+  m_Layer: 0
+  m_Name: Post-FX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &861582947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 861582946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 9b3a1f4424fe03544bbfc57e64bde84b, type: 2}
+--- !u!4 &861582948
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 861582946}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2.2380037, y: -1.1273723, z: 20}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 330585546}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &866806413
 GameObject:
@@ -3303,7 +3381,8 @@ MonoBehaviour:
   activeSprite: {fileID: 21300000, guid: 07727c83d43c62946a7e8a5bf514fea6, type: 3}
   zoneCollider: {fileID: 1169055256}
   damage: 1
-  warningDuration: 2
+  warningDuration: 1
+  activeDuration: 2
 --- !u!1 &1189410377
 GameObject:
   m_ObjectHideFlags: 0
@@ -5427,9 +5506,9 @@ MonoBehaviour:
   - {fileID: 1735938679}
   - {fileID: 847480775}
   - {fileID: 866806415}
-  warningDuration: 1
-  activeDuration: 2
   cooldownDuration: 4
+  warningDuration: 2
+  activeDuration: 2
 --- !u!1 &2102022575
 GameObject:
   m_ObjectHideFlags: 0

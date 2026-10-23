@@ -1,108 +1,159 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BossAttackController : MonoBehaviour
 {
-    //boss has a total of 1000 HP
     private enum BossPhase
     {
-        first, // hp > .8
-        second, // hp > .5
-        third, //hp > 0
-        defeat,
-        idle, //use this for maybe a start and end screen
-        debug //activate only certain attacks or whatever
+        First,
+        Second,
+        Third,
+        Defeat
     }
 
-    [SerializeField] private BossDialSpinAttack spinAttack;
-    [SerializeField] private BossGraphiteBlastAttack blastAttack;
-    [SerializeField] private BossPencilNibAttack nibAttack;
-    [SerializeField] private BossShavingCurlAttack curlAttack;
-    [SerializeField] private PlatformSpikeController platformSpikes;
-    [SerializeField] private IdleSpikes spikeZone;
+    [Header("References")]
+    [SerializeField] private BossHealth bossHealth;
+    [SerializeField] private BossAnimationController bossAnimation;
 
+    [Header("Phase One")]
+    [SerializeField] private BossAttack[] firstPhaseAttacks;
 
-    private BossHealth bossHealth;
+    [Header("Phase Two")]
+    [SerializeField] private BossAttack[] secondPhaseAttacks;
+
+    [Header("Phase Three")]
+    [SerializeField] private BossAttack[] thirdPhaseAttacks;
+
+    [SerializeField] private float delayBetweenAttacks = 1f;
+
     private BossPhase currentPhase;
+    private Queue<BossAttack> attackQueue = new Queue<BossAttack>();
+    private BossAttack activeAttack;
+    private Coroutine attackRoutine;
 
     private void Awake()
     {
-        bossHealth = GetComponent<BossHealth>();
-        //platformSpikes = GetComponentInChildren<PlatformSpikeController>();
-        DisableAllAttacks();
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        //currentPhase = BossPhase.debug; //swap with line under for actual gameplay
-        currentPhase = BossPhase.first;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (currentPhase == BossPhase.debug)
+        if (bossHealth == null)
         {
-            //platformSpikes.enabled = true;
-        }
-
-        if (currentPhase == BossPhase.first)
-        {
-            curlAttack.enabled = true;
-            spinAttack.enabled = true;
-            nibAttack.enabled = true;
-
-            //entering second phase
-            if (bossHealth.HealthFraction <= .8)
-            {
-                DisableAllAttacks();
-                currentPhase = BossPhase.second;
-                print("Boss phase: " + currentPhase);
-                curlAttack.enabled = true;
-                spinAttack.enabled = true;
-                blastAttack.enabled = true;
-                nibAttack.enabled = true;
-            }
-        }
-        else if(currentPhase == BossPhase.second)
-        {
-            //entering final phase
-            if (bossHealth.HealthFraction <= .5)
-            {
-                DisableAllAttacks();
-                currentPhase = BossPhase.third;
-                print("Boss phase: " + currentPhase);
-                spinAttack.enabled = true;
-                spikeZone.enabled = true;
-                platformSpikes.enabled = true;
-            }
-        }
-        else if(currentPhase == BossPhase.third)
-        {
-            //boss defeated
-            if(bossHealth.HealthFraction <= 0)
-            {
-                DisableAllAttacks();
-            }
+            bossHealth = GetComponent<BossHealth>();
         }
     }
 
-
-
-    private void DisableAllAttacks()
+    private void Start()
     {
-        spinAttack.enabled = false;
-        blastAttack.enabled = false;
-        nibAttack.enabled = false;
-        curlAttack.enabled = false;
+        EnterPhase(BossPhase.First);
+    }
 
-        platformSpikes.StopAttack();
-        platformSpikes.enabled = false;
-
-        if (spikeZone != null)
+    private void Update()
+    {
+        if (bossHealth.HealthFraction <= 0f)
         {
-            spikeZone.Hide();
-            spikeZone.enabled = false;
+            EnterDefeat();
+            return;
         }
+
+        CheckForPhaseChange();
+
+        if (attackRoutine == null)
+        {
+            if (attackQueue.Count == 0)
+            {
+                FillAttackQueue();
+            }
+
+            attackRoutine = StartCoroutine(RunNextAttack());
+        }
+    }
+
+    private IEnumerator RunNextAttack()
+    {
+        activeAttack = attackQueue.Dequeue();
+
+        yield return StartCoroutine(activeAttack.Run());
+
+        activeAttack = null;
+
+        yield return new WaitForSeconds(delayBetweenAttacks);
+
+        attackRoutine = null;
+    }
+
+    private void FillAttackQueue()
+    {
+        BossAttack[] availableAttacks = GetAttacksForCurrentPhase();
+
+        foreach (BossAttack attack in availableAttacks)
+        {
+            attackQueue.Enqueue(attack);
+        }
+    }
+
+    private BossAttack[] GetAttacksForCurrentPhase()
+    {
+        return currentPhase switch
+        {
+            BossPhase.First => firstPhaseAttacks,
+            BossPhase.Second => secondPhaseAttacks,
+            BossPhase.Third => thirdPhaseAttacks,
+            _ => new BossAttack[0]
+        };
+    }
+
+    private void EnterPhase(BossPhase newPhase)
+    {
+        StopCurrentAttack();
+
+        currentPhase = newPhase;
+        attackQueue.Clear();
+
+        Debug.Log("Boss phase: " + currentPhase);
+    }
+
+    private void CheckForPhaseChange()
+    {
+        if (currentPhase == BossPhase.First &&
+            bossHealth.HealthFraction <= 0.8f)
+        {
+            EnterPhase(BossPhase.Second);
+        }
+        else if (currentPhase == BossPhase.Second &&
+                 bossHealth.HealthFraction <= 0.5f)
+        {
+            EnterPhase(BossPhase.Third);
+        }
+    }
+
+    private void EnterDefeat()
+    {
+        StopCurrentAttack();
+
+        currentPhase = BossPhase.Defeat;
+        bossAnimation.PlayDefeat();
+
+        enabled = false;
+    }
+
+    private void StopCurrentAttack()
+    {
+        if (attackRoutine != null)
+        {
+            StopCoroutine(attackRoutine);
+            attackRoutine = null;
+        }
+
+        if (activeAttack != null)
+        {
+            activeAttack.CancelAttack();
+            activeAttack = null;
+        }
+
+        bossAnimation.PlayIdle();
+    }
+
+    private void DisableAllAttackScripts()
+    {
+        // The scripts should remain enabled but idle after refactoring.
+        // Do not use enabled = false as the attack system.
     }
 }

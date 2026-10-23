@@ -1,14 +1,8 @@
+using System.Collections;
 using UnityEngine;
 
-public class IdleSpikes : MonoBehaviour
+public class IdleSpikes : BossAttack
 {
-    private enum SpikeState
-    {
-        Cooldown,
-        Warning,
-        Active
-    }
-
     [SerializeField] private SpriteRenderer[] visuals;
     [SerializeField] private Sprite warningSprite;
     [SerializeField] private Sprite activeSprite;
@@ -16,39 +10,33 @@ public class IdleSpikes : MonoBehaviour
     [SerializeField] private int damage = 1;
 
     [SerializeField] private float warningDuration = 3f;
+    [SerializeField] private float activeDuration = 2f;
 
     private bool isActive;
-
-    private SpikeState state = SpikeState.Cooldown;
-    private float timer;
-
     private void Awake()
     {
         Hide();
-        timer = warningDuration;
     }
 
-    void Update()
+    protected override IEnumerator ExecuteAttack()
     {
-        timer -= Time.deltaTime;
+        ShowWarning();
 
-        if (timer <= 0)
-        {
-            if (state == SpikeState.Cooldown)
-            {
-                state = SpikeState.Warning;
-                SoundController.Instance.Play(SoundController.SoundEffect.SpikeRumble);
-                ShowWarning();
-                timer = warningDuration;
-            }
-            else if (state == SpikeState.Warning)
-            {
-                state = SpikeState.Active;
-                SetActive();
-            }
-            else { return; }
+        SoundController.Instance.Play(
+            SoundController.SoundEffect.SpikeRumble
+        );
 
-        }
+        yield return new WaitForSeconds(warningDuration);
+
+        SetActive();
+
+        SoundController.Instance.Play(
+            SoundController.SoundEffect.SpikeActivate
+        );
+
+        yield return new WaitForSeconds(activeDuration);
+
+        Hide();
     }
 
     public void ShowWarning()
@@ -90,11 +78,18 @@ public class IdleSpikes : MonoBehaviour
     {
         if (!isActive) return;
 
-        PlayerHealth player = other.GetComponentInParent<PlayerHealth>();
+        PlayerHealth player =
+            other.GetComponentInParent<PlayerHealth>();
 
         if (player != null)
         {
             player.TakeDamage(damage);
         }
+    }
+
+    public override void CancelAttack()
+    {
+        Hide();
+        base.CancelAttack();
     }
 }

@@ -1,81 +1,62 @@
+using System.Collections;
 using UnityEngine;
 
-public class PlatformSpikeController : MonoBehaviour
+public class PlatformSpikeController : BossAttack
 {
-    private enum SpikeState
-    {
-        Cooldown,
-        Warning,
-        Active
-    }
-
     [SerializeField] private PlatformSpike[] platformSpikes;
+    [SerializeField] private float cooldownDuration = 3f;
     [SerializeField] private float warningDuration = 2f;
     [SerializeField] private float activeDuration = 3f;
-    [SerializeField] private float cooldownDuration = 3f;
 
     private PlatformSpike firstSelected;
     private PlatformSpike secondSelected;
-    private SpikeState state = SpikeState.Cooldown;
-    private float timer;
-    private int choice, choice2;
 
-    private void Awake()
+    protected override IEnumerator ExecuteAttack()
     {
-        foreach (PlatformSpike spike in platformSpikes)
+        yield return new WaitForSeconds(cooldownDuration);
+
+        if (platformSpikes.Length < 2)
         {
-            spike.Hide();
+            yield break;
         }
 
-        state = SpikeState.Cooldown;
-        timer = 6f;
-    }
+        int firstIndex = Random.Range(0, platformSpikes.Length);
+        int secondIndex = firstIndex;
 
-    // Update is called once per frame
-    void Update()
-    {
-        timer -= Time.deltaTime;
-        
-        if(timer <= 0)
+        while (secondIndex == firstIndex)
         {
-            if (state == SpikeState.Cooldown)
-            {
-                choice = Random.Range(0, platformSpikes.Length);
-
-                choice2 = choice;
-                while (choice2 == choice)
-                {
-                    choice2 = Random.Range(0, platformSpikes.Length);
-                }
-
-                firstSelected = platformSpikes[choice];
-                secondSelected = platformSpikes[choice2];
-
-                firstSelected.ShowWarning();
-                secondSelected.ShowWarning();
-
-                state = SpikeState.Warning;
-                timer = warningDuration;
-            }
-            else if (state == SpikeState.Warning)
-            {
-                firstSelected.SetActive();
-                secondSelected.SetActive();
-                SoundController.Instance.Play(SoundController.SoundEffect.SpikeActivate);
-                state = SpikeState.Active;
-                timer = activeDuration;
-            }
-            else
-            {
-                firstSelected.ShowEmpty();
-                secondSelected.ShowEmpty();
-                state = SpikeState.Cooldown;
-                timer = cooldownDuration;
-            }
-            
+            secondIndex = Random.Range(0, platformSpikes.Length);
         }
+
+        firstSelected = platformSpikes[firstIndex];
+        secondSelected = platformSpikes[secondIndex];
+
+        firstSelected.ShowWarning();
+        secondSelected.ShowWarning();
+
+        SoundController.Instance.Play(
+            SoundController.SoundEffect.SpikeRumble
+        );
+
+        yield return new WaitForSeconds(warningDuration);
+
+        firstSelected.SetActive();
+        secondSelected.SetActive();
+
+        SoundController.Instance.Play(
+            SoundController.SoundEffect.SpikeActivate
+        );
+
+        yield return new WaitForSeconds(activeDuration);
+
+        firstSelected.Hide();
+        secondSelected.Hide();
+
+        firstSelected = null;
+        secondSelected = null;
     }
-    public void StopAttack()
+
+    public override void CancelAttack()
     {
         foreach (PlatformSpike spike in platformSpikes)
         {
@@ -84,12 +65,7 @@ public class PlatformSpikeController : MonoBehaviour
 
         firstSelected = null;
         secondSelected = null;
-        state = SpikeState.Cooldown;
-        timer = cooldownDuration;
-    }
 
-    private void OnDisable()
-    {
-        StopAttack();
+        base.CancelAttack();
     }
 }

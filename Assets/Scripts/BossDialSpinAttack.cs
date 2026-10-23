@@ -1,6 +1,7 @@
+using System.Collections;
 using UnityEngine;
 
-public class BossDialSpinAttack : MonoBehaviour
+public class BossDialSpinAttack : BossAttack
 {
     [SerializeField] private Projectile projectilePrefab;
     [SerializeField] private Transform upperFirePoint;
@@ -8,48 +9,38 @@ public class BossDialSpinAttack : MonoBehaviour
     [SerializeField] private int shotsPerBurst = 3;
     [SerializeField] private float shotSpacing = 0.3f;
     [SerializeField] private float burstCooldown = 2f;
+    [SerializeField] private BossAnimationController bossAnimation;
 
     private Transform selectedFirePoint;
-    private int shotsFired;
-    private float timer;
-    private bool isBursting;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    protected override IEnumerator ExecuteAttack()
     {
-        timer = burstCooldown;
-        isBursting = false;
+        bossAnimation.PlayDialSpin();
+        // Wait before the burst begins.
+        yield return new WaitForSeconds(burstCooldown);
 
-    }
+        // Choose either the upper or lower fire point.
+        selectedFirePoint =
+            Random.Range(0, 2) == 0
+                ? upperFirePoint
+                : lowerFirePoint;
 
-    // Update is called once per frame
-    void Update()
-    {
-        timer -= Time.deltaTime;
-        if (timer > 0) return;
-
-        if (!isBursting)
+        // Fire the projectiles in sequence.
+        for (int i = 0; i < shotsPerBurst; i++)
         {
-            //not firing and waiting/wind up
-            selectedFirePoint = Random.Range(0, 2) == 0 ? upperFirePoint : lowerFirePoint;
-            shotsFired = 0;
-            isBursting = true;
-        }
+            Projectile shot = Instantiate(
+                projectilePrefab,
+                selectedFirePoint.position,
+                Quaternion.identity
+            );
 
-        shotsFired += 1;
-        Projectile shot = Instantiate(projectilePrefab, selectedFirePoint.position, Quaternion.identity);
-        shot.SetDirection(Vector3.left);
+            shot.SetDirection(Vector3.left);
 
-        if(shotsFired >= shotsPerBurst)
-        {
-            isBursting = false;
-            timer = burstCooldown;
+            // Wait between shots, but not after the final shot.
+            if (i < shotsPerBurst - 1)
+            {
+                yield return new WaitForSeconds(shotSpacing);
+            }
         }
-        else
-        {
-            timer = shotSpacing;
-        }
-        
-        
     }
 }

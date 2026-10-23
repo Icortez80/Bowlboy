@@ -1,46 +1,53 @@
+using System.Collections;
 using UnityEngine;
 
-public class BossShavingCurlAttack : MonoBehaviour
+public class BossShavingCurlAttack : BossAttack
 {
-    [SerializeField] ShavingCurl shavingCurl;
-    [SerializeField] Transform upperStart;
-    [SerializeField] Transform upperTurn;
-    [SerializeField] Transform lowerTurn;
-    [SerializeField] Transform lowerEnd;
-    [SerializeField] public float spawnDelay = 3f;
+    [SerializeField] private ShavingCurl shavingCurl;
+    [SerializeField] private Transform upperStart;
+    [SerializeField] private Transform upperTurn;
+    [SerializeField] private Transform lowerTurn;
+    [SerializeField] private Transform lowerEnd;
+    [SerializeField] private float startupDelay = 3f;
+    [SerializeField] private BossAnimationController bossAnimation;
 
     private ShavingCurl activeCurl;
-    private float spawnTimer = 0f;
-    private void Start()
+
+    protected override IEnumerator ExecuteAttack()
     {
-        spawnTimer = spawnDelay;
+        bossAnimation.PlayBoomerang();
+
+        yield return new WaitForSeconds(startupDelay);
+
+        activeCurl = Instantiate(
+            shavingCurl,
+            upperStart.position,
+            Quaternion.identity
+        );
+
+        activeCurl.Initialize(
+            upperTurn,
+            lowerTurn,
+            lowerEnd
+        );
+
+        SoundController.Instance.Play(
+            SoundController.SoundEffect.BoomerangSpit
+        );
+
+        yield return new WaitUntil(() => activeCurl == null);
+
+        activeCurl = null;
     }
-    // Update is called once per frame
-    void Update()
+
+    public override void CancelAttack()
     {
-        //if there is a curl active simply return
-        if (activeCurl) return;
+        if (activeCurl != null)
         {
-            //this timer starts when the active curl has DESPAWNED
-            spawnTimer -= Time.deltaTime;
-            if(spawnTimer <= 0)
-            {
-                activeCurl = Instantiate(shavingCurl, upperStart.position, Quaternion.identity);
-                activeCurl.Initialize(upperTurn, lowerTurn, lowerEnd);
-                spawnTimer = spawnDelay;
-            }
+            Destroy(activeCurl.gameObject);
+            activeCurl = null;
         }
 
-
+        base.CancelAttack();
     }
-    //private void OnDisable()
-    //{
-    //    if (activeCurl != null)
-    //    {
-    //        Destroy(activeCurl.gameObject);
-    //        activeCurl = null;
-    //    }
-
-    //    spawnTimer = spawnDelay;
-    //}
 }
