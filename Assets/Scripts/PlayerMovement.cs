@@ -44,6 +44,7 @@ public class PlayerMovement : MonoBehaviour
     public bool IsGrounded => isGrounded;
     public bool IsDashing => isDashing;
     public float VerticalSpeed => rb.linearVelocity.y;
+    public bool IsSupering => superLocked;
 
     private PlayerInputReader inputReader;
 

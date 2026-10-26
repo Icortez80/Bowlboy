@@ -15,31 +15,34 @@ public class BossDialSpinAttack : BossAttack
 
     protected override IEnumerator ExecuteAttack()
     {
-        bossAnimation.PlayDialSpin();
-        // Wait before the burst begins.
-        yield return new WaitForSeconds(burstCooldown);
-
-        // Choose either the upper or lower fire point.
-        selectedFirePoint =
-            Random.Range(0, 2) == 0
-                ? upperFirePoint
-                : lowerFirePoint;
-
-        // Fire the projectiles in sequence.
-        for (int i = 0; i < shotsPerBurst; i++)
+        for(int j = 0; j < 3; j++)
         {
-            Projectile shot = Instantiate(
-                projectilePrefab,
-                selectedFirePoint.position,
-                Quaternion.identity
-            );
+            bossAnimation.PlayDialSpin();
+            // Wait before the burst begins.
+            yield return new WaitForSeconds(burstCooldown);
 
-            shot.SetDirection(Vector3.left);
+            // Choose either the upper or lower fire point.
+            selectedFirePoint =
+                Random.Range(0, 2) == 0
+                    ? upperFirePoint
+                    : lowerFirePoint;
 
-            // Wait between shots, but not after the final shot.
-            if (i < shotsPerBurst - 1)
+            // Fire the projectiles in sequence.
+            for (int i = 0; i < shotsPerBurst; i++)
             {
-                yield return new WaitForSeconds(shotSpacing);
+                Projectile shot = Instantiate(
+                    projectilePrefab,
+                    selectedFirePoint.position,
+                    Quaternion.identity
+                );
+
+                shot.SetDirection(Vector3.left);
+
+                // Wait between shots, but not after the final shot.
+                if (i < shotsPerBurst - 1)
+                {
+                    yield return new WaitForSeconds(shotSpacing);
+                }
             }
         }
     }

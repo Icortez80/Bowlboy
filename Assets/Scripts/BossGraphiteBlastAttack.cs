@@ -23,19 +23,16 @@ public class BossGraphiteBlastAttack : BossAttack
 
         if (selectedZone == upper)
         {
-            bossAnimation.PlayGraphiteTop();
-        }
+            bossAnimation.PlayGraphiteTop();        }
         else
         {
             bossAnimation.PlayGraphiteBottom();
         }
 
-        selectedZone.ShowWarning();
-
         yield return new WaitForSeconds(warningDuration);
 
-        selectedZone.Activate();
         SoundController.Instance.PlayBeam();
+        selectedZone.Activate();
 
         yield return new WaitForSeconds(activeDuration);
 

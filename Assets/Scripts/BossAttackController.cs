@@ -24,6 +24,10 @@ public class BossAttackController : MonoBehaviour
 
     [Header("Phase Three")]
     [SerializeField] private BossAttack[] thirdPhaseAttacks;
+    [SerializeField] private IdleSpikes idleSpike;
+    [SerializeField] private PlatformSpikeController platformSpikes;
+
+    private Coroutine idleSpikeRoutine;
 
     [SerializeField] private float delayBetweenAttacks = 1f;
 
@@ -103,11 +107,52 @@ public class BossAttackController : MonoBehaviour
     private void EnterPhase(BossPhase newPhase)
     {
         StopCurrentAttack();
+        StopPhaseHazards();
 
         currentPhase = newPhase;
         attackQueue.Clear();
 
+        if (newPhase == BossPhase.Third)
+        {
+            StartPhaseThreeHazards();
+        }
+
         Debug.Log("Boss phase: " + currentPhase);
+    }
+
+    private void StartPhaseThreeHazards()
+    {
+        if (idleSpike != null)
+        {
+            idleSpikeRoutine = StartCoroutine(
+                idleSpike.RunPersistent()
+            );
+        }
+
+        if (platformSpikes != null)
+        {
+            platformSpikes.BeginAttack();
+        }
+    }
+
+    private void StopPhaseHazards()
+    {
+        if (idleSpikeRoutine != null)
+        {
+            StopCoroutine(idleSpikeRoutine);
+            idleSpikeRoutine = null;
+        }
+
+        if (idleSpike != null)
+        {
+            idleSpike.StopAttack();
+        }
+
+        if (platformSpikes != null)
+        {
+            platformSpikes.StopAttack();
+        }
+        
     }
 
     private void CheckForPhaseChange()
@@ -127,6 +172,7 @@ public class BossAttackController : MonoBehaviour
     private void EnterDefeat()
     {
         StopCurrentAttack();
+        StopPhaseHazards();
 
         currentPhase = BossPhase.Defeat;
         bossAnimation.PlayDefeat();
@@ -149,11 +195,5 @@ public class BossAttackController : MonoBehaviour
         }
 
         bossAnimation.PlayIdle();
-    }
-
-    private void DisableAllAttackScripts()
-    {
-        // The scripts should remain enabled but idle after refactoring.
-        // Do not use enabled = false as the attack system.
     }
 }

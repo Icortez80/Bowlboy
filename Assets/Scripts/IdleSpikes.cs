@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class IdleSpikes : BossAttack
+public class IdleSpikes : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer[] visuals;
     [SerializeField] private Sprite warningSprite;
@@ -10,7 +10,6 @@ public class IdleSpikes : BossAttack
     [SerializeField] private int damage = 1;
 
     [SerializeField] private float warningDuration = 3f;
-    [SerializeField] private float activeDuration = 2f;
 
     private bool isActive;
     private void Awake()
@@ -18,7 +17,7 @@ public class IdleSpikes : BossAttack
         Hide();
     }
 
-    protected override IEnumerator ExecuteAttack()
+    public IEnumerator RunPersistent()
     {
         ShowWarning();
 
@@ -34,8 +33,15 @@ public class IdleSpikes : BossAttack
             SoundController.SoundEffect.SpikeActivate
         );
 
-        yield return new WaitForSeconds(activeDuration);
+        // Remain active indefinitely during phase three.
+        while (true)
+        {
+            yield return null;
+        }
+    }
 
+    public void StopAttack()
+    {
         Hide();
     }
 
@@ -85,11 +91,5 @@ public class IdleSpikes : BossAttack
         {
             player.TakeDamage(damage);
         }
-    }
-
-    public override void CancelAttack()
-    {
-        Hide();
-        base.CancelAttack();
     }
 }

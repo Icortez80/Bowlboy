@@ -31,6 +31,7 @@ public class PlayerAnimationController : MonoBehaviour
         animator.SetBool("IsShooting", isShooting);
         animator.SetBool("IsGrounded", movement.IsGrounded);
         animator.SetBool("IsDashing", movement.IsDashing);
+        animator.SetBool("IsSuper", movement.IsSupering);
         animator.SetFloat("VerticalSpeed", movement.VerticalSpeed);
 
         animator.SetBool("IsDefeated", health.IsDefeated);

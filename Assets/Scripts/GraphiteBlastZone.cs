@@ -3,8 +3,6 @@ using UnityEngine;
 public class GraphiteBlastZone : MonoBehaviour
 {
     [SerializeField] private Renderer zoneVisual;
-    //[SerializeField] private Material warningMaterial;
-    //[SerializeField] private Material activeMaterial;
     [SerializeField] private int damage = 1;
 
 

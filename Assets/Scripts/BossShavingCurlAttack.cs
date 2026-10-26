@@ -37,11 +37,14 @@ public class BossShavingCurlAttack : BossAttack
 
         yield return new WaitUntil(() => activeCurl == null);
 
+        SoundController.Instance.StopBoomerang();
         activeCurl = null;
     }
 
     public override void CancelAttack()
     {
+        SoundController.Instance.StopBoomerang();
+
         if (activeCurl != null)
         {
             Destroy(activeCurl.gameObject);

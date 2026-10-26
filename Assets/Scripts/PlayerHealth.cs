@@ -10,6 +10,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private SpriteRenderer healthMarker2;
     [SerializeField] private SpriteRenderer healthMarker3;
     [SerializeField] private Animator animator;
+    [SerializeField] private SceneController sceneManager;
     public bool IsDefeated => currentHealth <= 0;
 
     private PlayerSpecialAttack special;
@@ -49,6 +50,7 @@ public class PlayerHealth : MonoBehaviour
         if (currentHealth <= 0)
         {
             print("Player defeated!");
+            sceneManager.EndGame(false);
         }
 
         return true;
