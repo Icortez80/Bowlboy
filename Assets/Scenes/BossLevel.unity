@@ -724,7 +724,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed60656bb9c3abb4c892f49e233947cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossHealth
-  maxHealth: 100
+  maxHealth: 800
   currentHealth: 0
   sceneManager: {fileID: 330585548}
   soundController: {fileID: 791631530}

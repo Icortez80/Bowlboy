@@ -66,8 +66,8 @@ public class SceneController : MonoBehaviour
             startGameAction.action.WasPressedThisFrame() &&
             endSequenceStarted)
         {
-            Time.timeScale = 1f;
-            AudioListener.pause = false;
+            //Time.timeScale = 1f;
+            //AudioListener.pause = false;
             SceneManager.LoadScene(0);
         }
     }
@@ -97,14 +97,6 @@ public class SceneController : MonoBehaviour
 
         gameOver = true;
         winner = playerWin;
-
-        foreach (Behaviour script in gameplayScripts)
-        {
-            if (script != null)
-            {
-                script.enabled = false;
-            }
-        }
     }
 
     private void OnDestroy()
@@ -116,6 +108,14 @@ public class SceneController : MonoBehaviour
     private IEnumerator ShowEndScreenAfterDelay()
     {
         yield return new WaitForSecondsRealtime(3f);
+
+        foreach (Behaviour script in gameplayScripts)
+        {
+            if (script != null)
+            {
+                script.enabled = false;
+            }
+        }
 
         if (winner)
         {
