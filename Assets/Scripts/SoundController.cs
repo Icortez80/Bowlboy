@@ -13,15 +13,19 @@ public class SoundController : MonoBehaviour
         SuperShot,
 
         BossLaugh,
+        BossDefeat,
         BoomerangObject,
         BoomerangSpit,
         BeamShot,
         GraphiteBlastCue,
         GraphiteBlastBottom,
         NibBlastCue,
+        DialShot,
 
         SpikeRumble,
-        SpikeActivate
+        SpikeActivate,
+        GameStart,
+        GameVictory
     }
 
     [Header("Audio Source")]
@@ -29,6 +33,10 @@ public class SoundController : MonoBehaviour
     [SerializeField] private AudioSource beamSource;
     [SerializeField] private AudioSource playerBeamSource;
     [SerializeField] private AudioSource boomerangSource;
+
+    [Header("Scene")]
+    [SerializeField] private AudioClip gameStart;
+    [SerializeField] private AudioClip gameVictory;
 
 
     [Header("Player")]
@@ -40,12 +48,14 @@ public class SoundController : MonoBehaviour
 
     [Header("Boss")]
     [SerializeField] private AudioClip bossLaugh;
+    [SerializeField] private AudioClip bossDefeat;
     [SerializeField] private AudioClip boomerangObject;
     [SerializeField] private AudioClip boomerangSpit;
     [SerializeField] private AudioClip beamShot;
     [SerializeField] private AudioClip graphiteBlastCue;
     [SerializeField] private AudioClip graphiteBlastBottom;
     [SerializeField] private AudioClip nibBlastCue;
+    [SerializeField] private AudioClip dialShot;
 
     [Header("Spikes")]
     [SerializeField] private AudioClip spikeRumble;
@@ -96,15 +106,19 @@ public class SoundController : MonoBehaviour
             SoundEffect.SuperShot => superShot,
 
             SoundEffect.BossLaugh => bossLaugh,
+            SoundEffect.BossDefeat => bossDefeat,
             SoundEffect.BoomerangObject => boomerangObject,
             SoundEffect.BoomerangSpit => boomerangSpit,
             SoundEffect.BeamShot => beamShot,
             SoundEffect.GraphiteBlastCue => graphiteBlastCue,
             SoundEffect.GraphiteBlastBottom => graphiteBlastBottom,
             SoundEffect.NibBlastCue => nibBlastCue,
+            SoundEffect.DialShot => dialShot,
 
             SoundEffect.SpikeRumble => spikeRumble,
             SoundEffect.SpikeActivate => spikeActivate,
+            SoundEffect.GameStart => gameStart,
+            SoundEffect.GameVictory => gameVictory,
 
             _ => null
         };

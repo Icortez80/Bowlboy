@@ -2,12 +2,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using Unity.Multiplayer.Center.Common;
 
 public class SceneController : MonoBehaviour
 {
     [SerializeField] private GameObject startScreen;
     [SerializeField] private GameObject deathScreen;
     [SerializeField] private GameObject victoryScreen;
+    [SerializeField] private SoundController soundController;
     [SerializeField] private InputActionReference startGameAction;
 
     [Header("Scripts paused while the overlay is visible")]
@@ -17,6 +19,7 @@ public class SceneController : MonoBehaviour
     private bool gameOver;
     private bool winner;
     private bool endSequenceStarted;
+    public bool GameOver => gameOver;
 
     private void Awake()
     {
@@ -74,6 +77,7 @@ public class SceneController : MonoBehaviour
         gameStarted = true;
 
         startScreen.SetActive(false);
+        soundController.Play(SoundController.SoundEffect.GameStart);
 
         Time.timeScale = 1f;
         AudioListener.pause = false;
@@ -115,15 +119,17 @@ public class SceneController : MonoBehaviour
 
         if (winner)
         {
+            soundController.Play(SoundController.SoundEffect.GameVictory);
             victoryScreen.SetActive(true);
         }
         else
         {
+            soundController.Play(SoundController.SoundEffect.BossLaugh);
             deathScreen.SetActive(true);
         }
 
         Time.timeScale = 0f;
-        AudioListener.pause = true;
+        //AudioListener.pause = true;
     }
 
 }

@@ -5,6 +5,7 @@ public class BossHealth : MonoBehaviour
     [SerializeField] public int maxHealth = 1000;
     [SerializeField] private int currentHealth = 0;
     [SerializeField] private SceneController sceneManager;
+    [SerializeField] private SoundController soundController;
 
     public float HealthFraction => (float)currentHealth / maxHealth;
 
@@ -23,6 +24,7 @@ public class BossHealth : MonoBehaviour
         if (currentHealth <= 0)
         {
             print("Boss Defeated.");
+            soundController.Play(SoundController.SoundEffect.BossDefeat);
             sceneManager.EndGame(true);
         }
 

@@ -724,9 +724,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed60656bb9c3abb4c892f49e233947cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossHealth
-  maxHealth: 1000
+  maxHealth: 100
   currentHealth: 0
   sceneManager: {fileID: 330585548}
+  soundController: {fileID: 791631530}
 --- !u!65 &234122028
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -839,6 +840,7 @@ MonoBehaviour:
   shotSpacing: 0.3
   burstCooldown: 1
   bossAnimation: {fileID: 234122035}
+  soundController: {fileID: 791631530}
 --- !u!114 &234122034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1245,6 +1247,7 @@ MonoBehaviour:
   startScreen: {fileID: 1324217619}
   deathScreen: {fileID: 1533843675}
   victoryScreen: {fileID: 1354801109}
+  soundController: {fileID: 791631530}
   startGameAction: {fileID: -8923855598863535402, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   gameplayScripts:
   - {fileID: 2056946330}
@@ -2167,18 +2170,22 @@ MonoBehaviour:
   beamSource: {fileID: 791631532}
   playerBeamSource: {fileID: 791631533}
   boomerangSource: {fileID: 791631534}
+  gameStart: {fileID: 8300000, guid: 3c60cde8c1f541841910f4f3fe4fa61f, type: 3}
+  gameVictory: {fileID: 8300000, guid: 67971b6039a54954ab89d7c118a11082, type: 3}
   playerDash: {fileID: 8300000, guid: 130a68b0c44ee31488e6275dccc8e3e4, type: 3}
   playerShot: {fileID: 8300000, guid: f04796c6f8de5f14f812770d9536e06a, type: 3}
   playerHurt: {fileID: 8300000, guid: 1a6a04651d06f0646a3f876aa1862339, type: 3}
   exShot: {fileID: 8300000, guid: 4162dd09e62131e45afd97305b9ef6ea, type: 3}
   superShot: {fileID: 8300000, guid: de609b8092ba96747aca0f54a78dd904, type: 3}
   bossLaugh: {fileID: 8300000, guid: f78170fd59b11674a82ce1fc37d2014f, type: 3}
+  bossDefeat: {fileID: 8300000, guid: d0ac47ead301ba74c84967de0ed01604, type: 3}
   boomerangObject: {fileID: 8300000, guid: 4654c1149ddc68d478bd5a8a12923005, type: 3}
   boomerangSpit: {fileID: 8300000, guid: 9d14a2eff4f618640b2141e32fef6ee1, type: 3}
   beamShot: {fileID: 8300000, guid: 4f8e4360856ed9546994f3225a5bcab3, type: 3}
   graphiteBlastCue: {fileID: 8300000, guid: 9e1725991e470584e860ed8f81b378f6, type: 3}
   graphiteBlastBottom: {fileID: 8300000, guid: 2e58d874e95bc1340a347dc07a88c751, type: 3}
   nibBlastCue: {fileID: 8300000, guid: 861bf5a4afed86142adbf97af909388b, type: 3}
+  dialShot: {fileID: 8300000, guid: ae3a1799e86bb614a90b89dc92ddc9f1, type: 3}
   spikeRumble: {fileID: 8300000, guid: 2a12583b2fcf3f2488a87940417493ba, type: 3}
   spikeActivate: {fileID: 8300000, guid: b6056900f58eecf41ba3cbba8b6aa2e8, type: 3}
 --- !u!4 &791631531

@@ -41,6 +41,7 @@ public class PlayerHealth : MonoBehaviour
         //player currently using super
         if (special.IsSuperActive) return false;
         if (hitInvulnerabilityRemaining > 0) return false;
+        if (sceneManager.GameOver) return false;
        
         currentHealth -= damage;
         animator.SetTrigger("Hurt");

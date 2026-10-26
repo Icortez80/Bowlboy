@@ -10,6 +10,7 @@ public class BossDialSpinAttack : BossAttack
     [SerializeField] private float shotSpacing = 0.3f;
     [SerializeField] private float burstCooldown = 2f;
     [SerializeField] private BossAnimationController bossAnimation;
+    [SerializeField] private SoundController soundController;
 
     private Transform selectedFirePoint;
 
@@ -37,6 +38,7 @@ public class BossDialSpinAttack : BossAttack
                 );
 
                 shot.SetDirection(Vector3.left);
+                soundController.Play(SoundController.SoundEffect.DialShot);
 
                 // Wait between shots, but not after the final shot.
                 if (i < shotsPerBurst - 1)
