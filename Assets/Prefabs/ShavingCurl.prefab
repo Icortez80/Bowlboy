@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a78a3d9a19e0844e87416da1ed3744f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShavingCurl
-  speed: 10
+  speed: 12
   damage: 1
   upperTurn: {fileID: 0}
   lowerTurn: {fileID: 0}

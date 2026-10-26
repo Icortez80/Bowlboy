@@ -20,12 +20,15 @@ public class BossPencilNibAttack : BossAttack
             SoundController.SoundEffect.NibBlastCue
         );
 
+        float angleStep = shotCount > 1
+            ? spreadAngle / (shotCount - 1)
+            : 0f;
+
         for (int i = 0; i < shotCount; i++)
         {
-            float angle = Random.Range(
-                -spreadAngle * 0.5f,
-                spreadAngle * 0.5f
-            );
+            float angle = shotCount == 1
+                ? 0f
+                : -spreadAngle * 0.5f + i * angleStep;
 
             Vector3 direction =
                 Quaternion.Euler(0f, 0f, angle) * Vector3.left;

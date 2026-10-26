@@ -5378,8 +5378,8 @@ MonoBehaviour:
   fallMultiplier: 4
   shortHopTime: 0.1
   coyoteTime: 0.15
-  dashSpeed: 15
-  dashDuration: 0.2
+  dashSpeed: 20
+  dashDuration: 0.3
   dashCooldown: 0.5
   rb: {fileID: 2056946322}
   isGrounded: 0
