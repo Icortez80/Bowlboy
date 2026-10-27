@@ -95,6 +95,7 @@ public class SceneController : MonoBehaviour
     {
         if (gameOver) return;
 
+        gameplayScripts[0].enabled = false;
         gameOver = true;
         winner = playerWin;
     }
@@ -109,13 +110,14 @@ public class SceneController : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(3f);
 
-        foreach (Behaviour script in gameplayScripts)
-        {
-            if (script != null)
-            {
-                script.enabled = false;
-            }
-        }
+        gameplayScripts[1].enabled = false;
+        //foreach (Behaviour script in gameplayScripts)
+        //{
+        //    if (script != null)
+        //    {
+        //        script.enabled = false;
+        //    }
+        //}
 
         if (winner)
         {

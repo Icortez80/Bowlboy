@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -11,6 +13,9 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private SpriteRenderer healthMarker3;
     [SerializeField] private Animator animator;
     [SerializeField] private SceneController sceneManager;
+    [SerializeField] private Volume globalVolume;
+    private ChromaticAberration aberration;
+
     public bool IsDefeated => currentHealth <= 0;
 
     private PlayerSpecialAttack special;
@@ -23,7 +28,18 @@ public class PlayerHealth : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        currentHealth = maxHealth;    
+        currentHealth = maxHealth;
+        if (globalVolume == null)
+        {
+            globalVolume = FindAnyObjectByType<Volume>();
+        }
+
+        // 2. Fetch the Chromatic Aberration settings from the profile
+        if (globalVolume != null && globalVolume.profile.TryGet(out aberration))
+        {
+            // 3. Override and change the intensity (Value ranges from 0 to 1)
+            aberration.intensity.Override(0.2f);
+        }
     }
     private void Update()
     {
@@ -44,6 +60,7 @@ public class PlayerHealth : MonoBehaviour
         if (sceneManager.GameOver) return false;
        
         currentHealth -= damage;
+        IncreaseAberrationIntensity();
         animator.SetTrigger("Hurt");
         SoundController.Instance.Play(SoundController.SoundEffect.PlayerHurt);
         //print("Player health -1");
@@ -78,6 +95,14 @@ public class PlayerHealth : MonoBehaviour
             //disable health marker1
             healthMarker1.enabled = false;
 
+        }
+    }
+
+    public void IncreaseAberrationIntensity()
+    {
+        if (aberration != null)
+        {
+            aberration.intensity.value += Mathf.Clamp01(.1f);
         }
     }
 }

@@ -26,6 +26,7 @@ public class BossAttackController : MonoBehaviour
     [SerializeField] private BossAttack[] thirdPhaseAttacks;
     [SerializeField] private IdleSpikes idleSpike;
     [SerializeField] private PlatformSpikeController platformSpikes;
+    [SerializeField] private PencilMinionController pencilMinions;
 
     private Coroutine idleSpikeRoutine;
 
@@ -112,6 +113,11 @@ public class BossAttackController : MonoBehaviour
         currentPhase = newPhase;
         attackQueue.Clear();
 
+        if (newPhase == BossPhase.Second)
+        {
+            pencilMinions.BeginAttack();
+        }
+
         if (newPhase == BossPhase.Third)
         {
             StartPhaseThreeHazards();
@@ -173,6 +179,11 @@ public class BossAttackController : MonoBehaviour
     {
         StopCurrentAttack();
         StopPhaseHazards();
+
+        if (pencilMinions != null)
+        {
+            pencilMinions.StopAttack();
+        }
 
         currentPhase = BossPhase.Defeat;
         bossAnimation.PlayDefeat();

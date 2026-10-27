@@ -43,14 +43,19 @@ public class BossShavingCurlAttack : BossAttack
 
     public override void CancelAttack()
     {
-        SoundController.Instance.StopBoomerang();
+        // Let the spawned curl finish its path.
+        activeCurl = null;
 
-        if (activeCurl != null)
-        {
-            Destroy(activeCurl.gameObject);
-            activeCurl = null;
-        }
-
+        // This stops the attack routine, but does not destroy the curl object.
         base.CancelAttack();
     }
+
+    private void OnDestroy()
+    {
+        if (SoundController.Instance != null)
+        {
+            SoundController.Instance.StopBoomerang();
+        }
+    }
+
 }

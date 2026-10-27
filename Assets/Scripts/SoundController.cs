@@ -24,6 +24,7 @@ public class SoundController : MonoBehaviour
 
         SpikeRumble,
         SpikeActivate,
+        MinionDeath,
         GameStart,
         GameVictory
     }
@@ -60,6 +61,9 @@ public class SoundController : MonoBehaviour
     [Header("Spikes")]
     [SerializeField] private AudioClip spikeRumble;
     [SerializeField] private AudioClip spikeActivate;
+
+    [Header("Minion")]
+    [SerializeField] private AudioClip minionDeath;
 
     private void Awake()
     {
@@ -117,6 +121,7 @@ public class SoundController : MonoBehaviour
 
             SoundEffect.SpikeRumble => spikeRumble,
             SoundEffect.SpikeActivate => spikeActivate,
+            SoundEffect.MinionDeath => minionDeath,
             SoundEffect.GameStart => gameStart,
             SoundEffect.GameVictory => gameVictory,
 

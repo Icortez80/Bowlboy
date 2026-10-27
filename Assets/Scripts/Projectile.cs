@@ -48,6 +48,16 @@ public class Projectile : MonoBehaviour
 
                 Destroy(gameObject);
             }
+
+            PencilMinion minion = other.GetComponentInParent<PencilMinion>();
+
+            if (minion != null)
+            {
+                minion.TakeDamage(dmg);
+                Destroy(gameObject);
+                return;
+            }
+
         }
         else if(team == Team.Enemy)
         {
