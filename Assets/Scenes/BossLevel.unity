@@ -724,7 +724,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed60656bb9c3abb4c892f49e233947cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossHealth
-  maxHealth: 100
+  maxHealth: 600
   currentHealth: 0
   sceneManager: {fileID: 330585548}
   soundController: {fileID: 791631530}
@@ -3909,7 +3909,7 @@ MonoBehaviour:
   - {fileID: 1084134005}
   - {fileID: 1959417052}
   player: {fileID: 2056946326}
-  respawnDelay: 6
+  respawnDelay: 12
 --- !u!4 &1367872849
 Transform:
   m_ObjectHideFlags: 0
@@ -5997,8 +5997,8 @@ MonoBehaviour:
   - {fileID: 1735938679}
   - {fileID: 847480775}
   - {fileID: 866806415}
-  cooldownDuration: 1
-  warningDuration: 2
+  cooldownDuration: 2
+  warningDuration: 3
   activeDuration: 3
 --- !u!1 &2102022575
 GameObject:
