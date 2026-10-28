@@ -35,6 +35,8 @@ public class BossAttackController : MonoBehaviour
     private BossPhase currentPhase;
     private Queue<BossAttack> attackQueue = new Queue<BossAttack>();
     private BossAttack activeAttack;
+    // Handle to the currently running attack coroutine.
+    // null means "no attack is running, safe to start the next one."
     private Coroutine attackRoutine;
 
     private void Awake()
@@ -52,6 +54,7 @@ public class BossAttackController : MonoBehaviour
 
     private void Update()
     {
+        // health and phase checks
         if (bossHealth.HealthFraction <= 0f)
         {
             EnterDefeat();
@@ -60,6 +63,9 @@ public class BossAttackController : MonoBehaviour
 
         CheckForPhaseChange();
 
+        // If nothing is running, start the next attack.
+        // Update runs every frame, so this null check keeps us from
+        // starting a new coroutine on top of one that's still going.
         if (attackRoutine == null)
         {
             if (attackQueue.Count == 0)
@@ -67,20 +73,28 @@ public class BossAttackController : MonoBehaviour
                 FillAttackQueue();
             }
 
+            // Start the coroutine and keep the handle so StopCoroutine can find it later.
             attackRoutine = StartCoroutine(RunNextAttack());
         }
     }
 
+    // IEnumerator return type + yield return = this method can pause and resume.
     private IEnumerator RunNextAttack()
     {
         activeAttack = attackQueue.Dequeue();
 
+        // Start the attack's own coroutine and wait here until it finishes.
+        // The boss is "stuck" on this line while the attack plays out,
+        // but the rest of the game keeps running normally.
         yield return StartCoroutine(activeAttack.Run());
 
         activeAttack = null;
 
+        // Cooldown between attacks: pause here for delayBetweenAttacks seconds.
         yield return new WaitForSeconds(delayBetweenAttacks);
 
+        // Reaching the end means the whole sequence finished normally.
+        // Setting this to null is what lets Update start the next attack.
         attackRoutine = null;
     }
 
@@ -130,6 +144,7 @@ public class BossAttackController : MonoBehaviour
     {
         if (idleSpike != null)
         {
+            // Same pattern: save the handle so the hazard can be stopped on phase change or defeat.
             idleSpikeRoutine = StartCoroutine(
                 idleSpike.RunPersistent()
             );
@@ -196,6 +211,9 @@ public class BossAttackController : MonoBehaviour
         if (attackRoutine != null)
         {
             StopCoroutine(attackRoutine);
+            // A stopped coroutine never reaches its last line, so
+            // "attackRoutine = null" inside RunNextAttack won't run.
+            // We have to clear it manually here.
             attackRoutine = null;
         }
 

@@ -10,7 +10,9 @@ public class PlayerInputReader : MonoBehaviour
     [SerializeField] private InputActionReference dashAction;
     [SerializeField] private InputActionReference aimLockAction;
     [SerializeField] private InputActionReference specialAction;
-    [SerializeField] private float axisThresh = 0.4f;
+    [SerializeField] private float pressThresh = 0.5f;   // must pass this to register
+    [SerializeField] private float releaseThresh = 0.3f; // must fall below this to clear
+
     private Vector2 digitalInput;
     public Vector2 MoveAim => digitalInput;
     public bool JumpPressed => jumpAction.action.WasPressedThisFrame();
@@ -44,35 +46,22 @@ public class PlayerInputReader : MonoBehaviour
     void Update()
     {
         Vector2 rawInput = moveAimAction.action.ReadValue<Vector2>();
-        //X axis check
-        if(rawInput.x > axisThresh)
-        {
-            digitalInput.x = 1;
 
-        }else if( rawInput.x < -axisThresh)
-        {
-            digitalInput.x = -1;
-        }
-        else
-        {
-            digitalInput.x = 0;
-        }
+        digitalInput.x = ApplyHysteresis(rawInput.x, (int)digitalInput.x);
+        digitalInput.y = ApplyHysteresis(rawInput.y, (int)digitalInput.y);
+    }
 
-        //Y axis check
-        if (rawInput.y > axisThresh)
-        {
-            digitalInput.y = 1;
+    //this function is to help debounce the stick on controller
+    private int ApplyHysteresis(float raw, int current)
+    {
+        // Strong push registers immediately, including a direct flip from one side to the other
+        if (raw > pressThresh) return 1;
+        if (raw < -pressThresh) return -1;
 
-        }
-        else if (rawInput.y < -axisThresh)
-        {
-            digitalInput.y = -1;
-        }
-        else
-        {
-            digitalInput.y = 0;
-        }
+        // In the "gray zone" between release and press, hold the previous state
+        if (current == 1 && raw > releaseThresh) return 1;
+        if (current == -1 && raw < -releaseThresh) return -1;
 
-        //ebug.Log(digitalInput);
+        return 0;
     }
 }

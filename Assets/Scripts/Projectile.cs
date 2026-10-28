@@ -15,6 +15,7 @@ public class Projectile : MonoBehaviour
 
     private Rigidbody rb;
     private Vector3 direction = new Vector3(1f, 0f, 0f);
+    [SerializeField] private float rotationOffset = 0f;
     private PlayerEnergy energyOwner;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -72,7 +73,9 @@ public class Projectile : MonoBehaviour
 
     public void SetDirection(Vector3 newDirection)
     {
-        direction = newDirection;
+        direction = newDirection.normalized;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle + rotationOffset);
     }
 
     public void SetEnergyOwner(PlayerEnergy owner)
